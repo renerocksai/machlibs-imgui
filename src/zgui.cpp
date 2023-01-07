@@ -1107,9 +1107,54 @@ ZGUI_API ImGuiID zguiGetPtrId(const void* ptr_id) {
     return ImGui::GetID(ptr_id);
 }
 
+// ===
+
+// missing from zgui (renerocksai)
+ZGUI_API void zguiIoClearFontAtlas() {
+    ImGui::GetIO().Fonts->Clear();
+}
+
+ZGUI_API void zguiDestroyFont(ImFont* font) {
+    IM_DELETE(font);
+}
+
+// ---
+// already present in latest zgui
+
+ZGUI_API ImFont* zguiIoAddFontFromFileWithConfig(
+    const char* filename,
+    float size_pixels,
+    const ImFontConfig* config,
+    const ImWchar* ranges
+) {
+    return ImGui::GetIO().Fonts->AddFontFromFileTTF(filename, size_pixels, config, ranges);
+}
+
 ZGUI_API ImFont* zguiIoAddFontFromFile(const char* filename, float size_pixels) {
     return ImGui::GetIO().Fonts->AddFontFromFileTTF(filename, size_pixels, nullptr, nullptr);
 }
+
+ZGUI_API ImFont* zguiIoAddFontFromMemoryWithConfig(
+    void* font_data,
+    int font_size,
+    float size_pixels,
+    const ImFontConfig* config,
+    const ImWchar* ranges
+) {
+    return ImGui::GetIO().Fonts->AddFontFromMemoryTTF(font_data, font_size, size_pixels, config, ranges);
+}
+
+ZGUI_API ImFont* zguiIoAddFontFromMemory(void* font_data, int font_size, float size_pixels) {
+    ImFontConfig config = ImFontConfig();
+    config.FontDataOwnedByAtlas = false;
+    return ImGui::GetIO().Fonts->AddFontFromMemoryTTF(font_data, font_size, size_pixels, &config, nullptr);
+}
+
+ZGUI_API ImFontConfig zguiFontConfig_Init(void) {
+    return ImFontConfig();
+}
+
+// ---
 
 ZGUI_API ImFont* zguiIoGetFont(unsigned int index) {
     return ImGui::GetIO().Fonts->Fonts[index];

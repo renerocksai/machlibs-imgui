@@ -23,13 +23,86 @@ pub fn deinit() void {
 extern fn zguiCreateContext(shared_font_atlas: ?*const anyopaque) Context;
 extern fn zguiDestroyContext(ctx: ?Context) void;
 extern fn zguiGetCurrentContext() ?Context;
+
+pub const FontConfig = extern struct {
+    font_data: ?*anyopaque,
+    font_data_size: i32,
+    font_data_owned_by_atlas: bool,
+    font_no: i32,
+    size_pixels: f32,
+    oversample_h: i32,
+    oversample_v: i32,
+    pixel_snap_h: bool,
+    glyph_extra_spacing: [2]f32,
+    glyph_offset: [2]f32,
+    glyph_ranges: [*c]u16,
+    glyph_min_advance_x: f32,
+    glyph_max_advance_x: f32,
+    merge_mode: bool,
+    font_builder_flags: u32,
+    rasterizer_multiply: f32,
+    ellipsis_char: Wchar,
+    name: [40]u8,
+    dst_font: *Font,
+
+    pub fn init() FontConfig {
+        return zguiFontConfig_Init();
+    }
+    extern fn zguiFontConfig_Init() FontConfig;
+};
+
 //--------------------------------------------------------------------------------------------------
 pub const io = struct {
+    pub fn zguiIoDestroyFont(font: *Font) void {
+        zguiDestroyFont(font);
+    }
+    extern fn zguiDestroyFont() void;
+
+    pub fn clearFontAtlas() void {
+        return zguiIoClearFontAtlas();
+    }
+    extern fn zguiIoClearFontAtlas() void;
+
     pub fn addFontFromFile(filename: [:0]const u8, size_pixels: f32) Font {
         return zguiIoAddFontFromFile(filename, size_pixels);
     }
     extern fn zguiIoAddFontFromFile(filename: [*:0]const u8, size_pixels: f32) Font;
 
+    pub fn addFontFromFileWithConfig(
+        filename: [:0]const u8,
+        size_pixels: f32,
+        config: ?FontConfig,
+        ranges: ?[*]const Wchar,
+    ) Font {
+        return zguiIoAddFontFromFileWithConfig(filename, size_pixels, if (config) |c| &c else null, ranges);
+    }
+    extern fn zguiIoAddFontFromFileWithConfig(
+        filename: [*:0]const u8,
+        size_pixels: f32,
+        config: ?*const FontConfig,
+        ranges: ?[*]const Wchar,
+    ) Font;
+
+    pub fn addFontFromMemory(fontdata: []const u8, size_pixels: f32) Font {
+        return zguiIoAddFontFromMemory(fontdata.ptr, @intCast(i32, fontdata.len), size_pixels);
+    }
+    extern fn zguiIoAddFontFromMemory(font_data: *const anyopaque, font_size: i32, size_pixels: f32) Font;
+
+    pub fn addFontFromMemoryWithConfig(
+        fontdata: []const u8,
+        size_pixels: f32,
+        config: ?FontConfig,
+        ranges: ?[*]const Wchar,
+    ) Font {
+        return zguiIoAddFontFromMemoryWithConfig(fontdata.ptr, @intCast(i32, fontdata.len), size_pixels, if (config) |c| &c else null, ranges);
+    }
+    extern fn zguiIoAddFontFromMemoryWithConfig(
+        font_data: *const anyopaque,
+        font_size: i32,
+        size_pixels: f32,
+        config: ?*const FontConfig,
+        ranges: ?[*]const Wchar,
+    ) Font;
     /// `pub fn getFont(index: u32) Font`
     pub const getFont = zguiIoGetFont;
     extern fn zguiIoGetFont(index: u32) Font;
