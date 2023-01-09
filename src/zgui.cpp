@@ -1144,21 +1144,6 @@ ZGUI_API ImGuiID zguiGetPtrId(const void* ptr_id) {
     return ImGui::GetID(ptr_id);
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-// missing from zgui (renerocksai)
-//
-ZGUI_API void zguiIoClearFontAtlas() {
-    ImGui::GetIO().Fonts->Clear();
-}
-
-ZGUI_API void zguiDestroyFont(ImFont* font) {
-    IM_DELETE(font);
-}
-//
-// end missing from zgui (renerocksai)
-///////////////////////////////////////////////////////////////////////////////
-
 ZGUI_API ImFont* zguiIoAddFontFromFileWithConfig(
     const char* filename,
     float size_pixels,

@@ -132,23 +132,6 @@ pub const FontConfig = extern struct {
 };
 
 pub const io = struct {
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // missing from zgui (renerocksai)
-    //
-    pub fn zguiIoDestroyFont(font: *Font) void {
-        zguiDestroyFont(font);
-    }
-    extern fn zguiDestroyFont() void;
-
-    pub fn clearFontAtlas() void {
-        return zguiIoClearFontAtlas();
-    }
-    extern fn zguiIoClearFontAtlas() void;
-    //
-    // end missing from zgui (renerocksai)
-    ///////////////////////////////////////////////////////////////////////////////
-
     pub fn addFontFromFile(filename: [:0]const u8, size_pixels: f32) Font {
         return zguiIoAddFontFromFile(filename, size_pixels);
     }

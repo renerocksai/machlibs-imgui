@@ -23,6 +23,7 @@ pub fn link(exe: *std.build.LibExeObjStep) void {
     exe.addIncludePath(this_dir ++ "/libs/imgui");
 
     exe.addCSourceFile(this_dir ++ "/src/zgui.cpp", &.{""});
+    exe.addCSourceFile(this_dir ++ "/src/zgui_ext.cpp", &.{""});
     exe.addCSourceFile(this_dir ++ "/libs/imgui/imgui.cpp", &.{""});
     exe.addCSourceFile(this_dir ++ "/libs/imgui/imgui_widgets.cpp", &.{""});
     exe.addCSourceFile(this_dir ++ "/libs/imgui/imgui_tables.cpp", &.{""});
